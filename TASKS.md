@@ -1631,21 +1631,30 @@ stale silently. The protocol is
 ### T-010 · Board bring-up
 ```
 BLOCKED:
-Reason:         No physical board is available, and the exact variant is unknown.
-Evidence:       OPEN_QUESTIONS A1, A2. The T-Watch ships with one of five radio
-                chips and one of two GNSS modules; the GNSS power rail differs
-                between board revisions (BLDO1 vs DC3).
-Impact:         Blocks all bring-up, every power measurement, the whole
-                interference matrix, and any claim that hardware works.
+Reason:         The T-Watch S3 Plus is ORDERED, not PRESENT — no physical unit
+                to bring up yet. The Waveshare is on the desk but its schematic
+                revision (silkscreen vs V1.0) is still unread.
+Evidence:       OPEN_QUESTIONS A1 (OD-16, issue #54, 2026-08-22). A2 (which
+                radio, which GNSS) is answered by the order listing — SX1262
+                868 MHz, MIA-M10Q — but a listing is a seller's claim, not a
+                marking read off the part, so RadioChip::Unknown does not
+                change until the watch arrives and the marking is read. The
+                GNSS power rail still differs between board revisions (BLDO1
+                vs DC3) and that revision is exactly what a marking read
+                would settle.
+Impact:         Blocks all T-Watch bring-up, every power measurement, the
+                whole interference matrix, and any claim that hardware works.
+                Does not block Waveshare bring-up, which is unblocked and
+                simply not yet done (see the M1 section above).
 Possible options:
                 1. Proceed on simulator and host tests only — no hardware claims.
-                2. Obtain a board and record its exact variant.
+                2. Wait for the T-Watch to arrive and read the marking then.
                 3. Write the bring-up checklist now so that day one with real
                    hardware is not spent improvising.
 Recommended next action:
-                Option 3 now, in parallel with option 1. Ask the project owner
-                about hardware availability (A1–A3); A4 is closed, not
-                outstanding (OD-14).
+                Option 3 now, in parallel with option 1. A1–A3 are answered
+                (OD-16); nothing further to ask the owner here. A4 is closed,
+                not outstanding (OD-14).
 ```
 
 ### T-011 · Interference measurement
@@ -1680,30 +1689,35 @@ Recommended next action:
 ### T-012 · Answers from the project owner
 - **Priority:** P0
 - **Waiting on:** the project owner
-- **Questions:** [OPEN_QUESTIONS](docs/research/OPEN_QUESTIONS.md) A1, A2, A3,
-  A6 — hardware availability and revision · which radio and GNSS variant ·
-  a second mesh device · whether the node carries a magnetometer. **A5 is
-  answered** — 2026-08-22, the owner has ordered a CJMCU-9911 (AK09911C) and a
-  GY-271 (QMC5883L) and is soldering one in
-  ([#83](https://github.com/hleserg/Attadipa/issues/83)). A6 is untouched by
+- **Questions:** [OPEN_QUESTIONS](docs/research/OPEN_QUESTIONS.md) A6 —
+  whether the node carries a magnetometer. **A1–A3 are no longer on this
+  list** — answered 2026-08-22 on
+  [#54](https://github.com/hleserg/Attadipa/issues/54), recorded as
+  [OD-16](docs/research/OWNER_DECISIONS.md#od-16--a1-a2-and-a3-no-watch-yet-sx1262-confirmed-by-listing-and-three-meshcore-nodes-instead-of-one).
+  A1's schematic-revision sub-question and A2's marking-read-off-the-part
+  confirmation remain, but both are hardware-in-hand tasks now, not owner
+  questions. **A5 is no longer on it either** — 2026-08-22, the owner has
+  ordered a CJMCU-9911 (AK09911C) and a GY-271 (QMC5883L) and is soldering one
+  in ([#83](https://github.com/hleserg/Attadipa/issues/83)). A6 is untouched by
   that: a node's magnetometer and a wrist's magnetometer answer different
-  questions. **A4 (the regulatory region) is no longer on this
-  list** — closed 2026-08-22, not by an answer but by the owner declining to
-  give one: legality is his problem, not the firmware's
+  questions. **A4 (the regulatory region) is no longer on this list** — closed
+  2026-08-22, not by an answer but by the owner declining to give one:
+  legality is his problem, not the firmware's
   ([OD-14](docs/research/OWNER_DECISIONS.md#od-14--which-region-is-the-owners-problem-not-the-firmwares)).
   No task here researches a specific jurisdiction's rules on the project's own
   initiative; [ADR-0006](docs/adr/0006-settings-and-bounded-values.md)'s
   transmit-closed-while-`Unknown` gate needs no such research to keep working.
-- **Impact:** A1–A2 gate all hardware work, and A2 got sharper: of the five
-  candidate radios, two cannot do LoRa at all and only one is supported by the
-  pinned MeshCore ([ADR-0003](docs/adr/0003-radio-not-lora.md)), so the answer
-  decides whether the watch has a local mesh path at all. A5 and A6 decide
-  whether five magnetometer epics are dormant or dead, and A6 does **not** give
-  the watch a compass even if the answer is yes
+- **Impact:** A5 and A6 decide whether five magnetometer epics are dormant or
+  dead, and A6 does **not** give the watch a compass even if the answer is yes
   ([ADR-0009](docs/adr/0009-heading.md) §3). A5's answer moves those five epics
   from *possibly dead* to *dormant with a delivery date*, and hands
   [ADR-0009](docs/adr/0009-heading.md) a second possible provider for heading —
-  see [MAGNETOMETER_RETROFIT](docs/research/MAGNETOMETER_RETROFIT.md).
+  see [MAGNETOMETER_RETROFIT](docs/research/MAGNETOMETER_RETROFIT.md). A2's
+  answer, now given, decided the other half: of the five candidate radios two
+  cannot do LoRa at all and only one is supported by the pinned MeshCore
+  ([ADR-0003](docs/adr/0003-radio-not-lora.md)), and the order listing says
+  SX1262 — so the watch has a local mesh path, subject to reading the marking
+  off the physical part when it arrives.
 - **None of these blocks M1.**
 
 ### T-014 · Mandatory backlogs from the specification
