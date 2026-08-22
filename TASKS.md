@@ -1573,13 +1573,31 @@ stale silently. The protocol is
   current — the one value that has never been read and cannot be quoted from
   the datasheet, because its reset value is eFuse-trimmed), `0x50`, `0x58`,
   `0x12` and `0x69`, at I²C address `0x34`.
+- **And one bus scan, now a precondition rather than a footnote:** whether
+  `0x6A` is free for the magnetometer retrofit ([#83](https://github.com/hleserg/Attadipa/issues/83))
+  depends on which QMI8658 address mapping this unit's IMU follows —
+  [HARDWARE_MATRIX](docs/research/HARDWARE_MATRIX.md) marks that
+  `CONFLICTING` — and the resolving scan on `SDA 15 / SCL 14` is the same one
+  [WAVESHARE_BOARD_RECEIVED](docs/research/WAVESHARE_BOARD_RECEIVED.md) §3
+  already lists as outstanding. Do not resolve the conflict by picking the
+  likelier mapping; run the scan.
 - **Acceptance:** each of M1, M2 and M3 recorded as `MEASURED` with the
-  instrument named, the five register values recorded as read, and the sizing
-  table in [BATTERY_UPGRADE](docs/research/BATTERY_UPGRADE.md) resolved to one
-  row. `UNKNOWN` stays `UNKNOWN` for anything not actually taken.
+  instrument named, the five register values recorded as read, the bus scan
+  recorded as run with whichever address ACKed, and the sizing table in
+  [BATTERY_UPGRADE](docs/research/BATTERY_UPGRADE.md) resolved to one row.
+  `UNKNOWN` stays `UNKNOWN` for anything not actually taken.
 - **What must not be assumed:** that the sticker settles the capacity. Reading
   it was verified; what it means is exactly what is in doubt.
 - **Hardware required:** yes — the board, a caliper, a scale, and one I²C read.
+- **Update 2026-08-22 — PAUSED behind [#83](https://github.com/hleserg/Attadipa/issues/83).**
+  The owner has ordered a magnetometer to solder into the same cavity this
+  task's M1/M2 measure, so the cell is chosen after the sensor is sited, not
+  before ([STATUS.md](STATUS.md), [BATTERY_UPGRADE](docs/research/BATTERY_UPGRADE.md)).
+  **This task's text above is left exactly as written** — the measurements
+  themselves are still correct and still the ones to take — but they are not
+  to be taken, and no cell is to be ordered from them, until #83 sites the
+  sensor. Do not pick this task up before then, even though it is still filed
+  under `## READY` rather than moved.
 
 ### T-109 · The magnetometer that is in the post, and the one measurement that chooses it
 - **Priority:** P2 — nothing can start until the parts land, but what to do
